@@ -15,7 +15,7 @@ export default function Contact() {
     {
       name: "Instagram",
       icon: FaInstagram,
-      url: "https://instagram.com/",
+      url: "https://instagram.com/atul277777",
       bg: "from-pink-400 to-pink-600",
       hover: "hover:from-pink-500 hover:to-pink-700",
     },
