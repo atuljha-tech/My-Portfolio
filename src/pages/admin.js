@@ -9,16 +9,53 @@ const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
 const preset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
 
 async function uploadToCloudinary(file) {
-  if (!file) return null
-  const data = new FormData()
-  data.append("file", file)
-  data.append("upload_preset", preset)
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-    method: "POST",
-    body: data,
-  })
-  const json = await res.json()
-  return json.secure_url || null
+  if (!file) {
+    console.log("❌ No file provided to uploadToCloudinary");
+    return null;
+  }
+
+  console.log("📤 uploadToCloudinary called with file:", {
+    name: file.name,
+    size: file.size,
+    type: file.type,
+    cloudName: cloudName,
+    preset: preset
+  });
+
+  const data = new FormData();
+  data.append("file", file);
+  data.append("upload_preset", preset);
+
+  try {
+    console.log("🔄 Sending to Cloudinary...");
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+      method: "POST",
+      body: data,
+    });
+
+    console.log("📡 Cloudinary response status:", res.status);
+    console.log("📡 Cloudinary response ok:", res.ok);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("❌ Cloudinary error response:", errorText);
+      throw new Error(`Upload failed: ${res.status} ${res.statusText}`);
+    }
+
+    const json = await res.json();
+    console.log("📸 Cloudinary success response:", json);
+
+    if (json.secure_url) {
+      console.log("✅ Upload successful, returning:", json.secure_url);
+      return json.secure_url;
+    } else {
+      console.error("❌ No secure_url in response:", json);
+      return null;
+    }
+  } catch (error) {
+    console.error("💥 Upload error:", error);
+    return null;
+  }
 }
 
 export default function AdminPage() {
@@ -195,47 +232,79 @@ export default function AdminPage() {
 
   // ====== Project Handlers ======
   async function handleSaveProject(e) {
-    e.preventDefault()
-    try {
-      setSavingProject(true)
-      const imageUrl = projectFile ? await uploadToCloudinary(projectFile) : editingProject?.imageUrl || ""
-      const payload = { title: title || "Untitled Project", description: desc || "", link: link || "", imageUrl }
-
-      if (editingProject) {
-        const res = await fetch("/api/auth/projects", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...payload, id: editingProject._id }),
-        })
-        if (!res.ok) throw new Error("Failed to update project")
-        const updated = await res.json()
-        setProjects(projects.map((p) => (p._id === updated._id ? updated : p)))
-        setEditingProject(null)
-        toast.success("Project updated successfully!")
-      } else {
-        const res = await fetch("/api/auth/projects", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        })
-        if (!res.ok) throw new Error("Failed to add project")
-        const saved = await res.json()
-        setProjects([saved, ...projects])
-        toast.success("Project added successfully!")
-      }
-
-      setTitle("")
-      setDesc("")
-      setLink("")
-      setProjectFile(null)
-      setProjectPreview(null)
-    } catch (err) {
-      toast.error(err.message)
-    } finally {
-      setSavingProject(false)
+  e.preventDefault()
+  try {
+    setSavingProject(true)
+    
+    console.log("🔍 DEBUG handleSaveProject START:");
+    console.log("Editing project:", editingProject);
+    console.log("Project file:", projectFile);
+    
+    // FIX: Store the file in a variable before any state changes
+    const currentProjectFile = projectFile;
+    
+    let imageUrl;
+    
+    if (currentProjectFile) {
+      console.log("🔄 Uploading project file...");
+      imageUrl = await uploadToCloudinary(currentProjectFile);
+      console.log("Upload result:", imageUrl);
+    } else {
+      imageUrl = editingProject?.imageUrl || "";
+      console.log("📝 Using existing image URL:", imageUrl);
     }
-  }
+    
+    console.log("Final imageUrl:", imageUrl);
+    
+    const payload = { 
+      title: title || "Untitled Project", 
+      description: desc || "", 
+      link: link || "", 
+      imageUrl 
+    }
 
+    console.log("📦 Payload to send:", payload);
+
+    if (editingProject) {
+      console.log("🔄 Updating existing project...");
+      const res = await fetch("/api/auth/projects", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...payload, id: editingProject._id }),
+      })
+      if (!res.ok) throw new Error("Failed to update project")
+      const updated = await res.json()
+      setProjects(projects.map((p) => (p._id === updated._id ? updated : p)))
+      setEditingProject(null)
+      toast.success("Project updated successfully!")
+    } else {
+      console.log("🆕 Creating new project...");
+      const res = await fetch("/api/auth/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) throw new Error("Failed to add project")
+      const saved = await res.json()
+      setProjects([saved, ...projects])
+      toast.success("Project added successfully!")
+    }
+
+    // Reset form
+    setTitle("")
+    setDesc("")
+    setLink("")
+    setProjectFile(null)
+    setProjectPreview(null)
+    
+    console.log("✅ handleSaveProject COMPLETED");
+  } catch (err) {
+    console.error("❌ Error in handleSaveProject:", err);
+    toast.error(err.message)
+  } finally {
+    setSavingProject(false)
+  }
+}
   function startEditProject(project) {
     setEditingProject(project)
     setTitle(project.title)

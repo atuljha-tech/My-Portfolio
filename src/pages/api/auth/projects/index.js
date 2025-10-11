@@ -65,6 +65,35 @@ export default async function handler(req, res) {
       return res.status(201).json(created)
     }
 
+    // ADD THIS PATCH METHOD
+    if (req.method === "PATCH") {
+      const session = await getServerSession(req, res, authOptions)
+      console.log("[v0] PATCH - Session check:", !!session)
+      if (!session) {
+        return res.status(401).json({ error: "Unauthorized" })
+      }
+
+      const { id, title, description, link, imageUrl } = req.body || {}
+      console.log("[v0] PATCH - Updating project:", { id, title, description, link, imageUrl })
+      
+      if (!id) {
+        return res.status(400).json({ error: "id is required" })
+      }
+
+      const updated = await Project.findByIdAndUpdate(
+        id,
+        { title, description, link, imageUrl },
+        { new: true } // This returns the updated document
+      )
+      
+      if (!updated) {
+        return res.status(404).json({ error: "Project not found" })
+      }
+      
+      console.log("[v0] Project updated successfully:", updated._id)
+      return res.status(200).json(updated)
+    }
+
     if (req.method === "DELETE") {
       const session = await getServerSession(req, res, authOptions)
       if (!session) {
@@ -81,7 +110,8 @@ export default async function handler(req, res) {
       return res.status(200).json({ message: "Project deleted successfully" })
     }
 
-    res.setHeader("Allow", ["GET", "POST", "DELETE"])
+    // UPDATE THIS LINE TO INCLUDE PATCH
+    res.setHeader("Allow", ["GET", "POST", "PATCH", "DELETE"])
     return res.status(405).end("Method Not Allowed")
   } catch (err) {
     console.error("❌ API /api/auth/projects error:", err)
