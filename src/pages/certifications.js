@@ -7,7 +7,7 @@ export default function CertificationsPage() {
   const [certs, setCerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null); // 👈 for modal
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     fetchCerts();
@@ -72,18 +72,47 @@ export default function CertificationsPage() {
     }
   }
 
-  if (loading) return <p className="p-6 text-center text-gray-500">Loading...</p>;
-  if (error) return <p className="p-6 text-center text-red-600">Error: {error}</p>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center gap-3 text-slate-600">
+        <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-lg">Loading certifications...</p>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-red-50 border border-red-200 rounded-2xl p-6 max-w-md text-center">
+        <p className="text-red-700 font-medium">Error: {error}</p>
+      </div>
+    </div>
+  );
 
   return (
-    <section className="min-h-screen py-16 bg-gradient-to-br from-white to-blue-50">
+    <section className="min-h-screen py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
       <div className="max-w-6xl mx-auto px-6">
-        <h1 className="text-4xl md:text-5xl font-bold text-blue-700 mb-12 text-center animate-fadeIn">
-          Certifications & Participations
-        </h1>
+        {/* Enhanced Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-4 mb-4">
+            <div className="w-3 h-12 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></div>
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-slate-800 via-blue-700 to-slate-900 bg-clip-text text-transparent tracking-tight">
+              Certifications & Participations
+            </h1>
+            <div className="w-3 h-12 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></div>
+          </div>
+          <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+            My achievements and recognition in the field
+          </p>
+        </div>
 
         {certs.length === 0 ? (
-          <p className="text-gray-600 text-center">No certifications uploaded yet.</p>
+          <div className="text-center py-20">
+            <div className="w-24 h-24 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <span className="text-4xl">🏆</span>
+            </div>
+            <p className="text-slate-500 text-xl">No certifications uploaded yet.</p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {certs.map((c) => (

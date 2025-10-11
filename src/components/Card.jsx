@@ -1,33 +1,50 @@
 export default function Card({ title, description }) {
   return (
-    <div className="group relative bg-gradient-to-br from-white via-blue-50/20 to-white border border-blue-100/60 rounded-3xl shadow-xl hover:shadow-2xl p-8 flex flex-col items-center text-center transition-all duration-700 hover:scale-[1.03] cursor-pointer overflow-hidden backdrop-blur-sm">
-      {/* Premium glassmorphism overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-blue-400/3 to-blue-600/8 opacity-0 group-hover:opacity-100 transition-all duration-700 rounded-3xl"></div>
+    <div className="group relative bg-gradient-to-br from-white via-blue-50/30 to-white/90 border border-blue-200/40 rounded-3xl shadow-2xl hover:shadow-3xl p-8 flex flex-col items-center text-center transition-all duration-500 hover:scale-[1.02] cursor-pointer overflow-hidden backdrop-blur-lg">
+      
+      {/* Enhanced glassmorphism overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/8 via-transparent to-blue-600/5 opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-3xl"></div>
 
-      {/* Animated glow border */}
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 opacity-0 group-hover:opacity-25 blur-xl transition-all duration-700 -z-10 animate-pulse"></div>
+      {/* Subtle animated glow effect */}
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400/20 via-blue-500/15 to-blue-600/20 opacity-0 group-hover:opacity-100 transition-all duration-700 -z-10 group-hover:animate-pulse-slow"></div>
 
-      {/* Enhanced Card Content */}
-      <div className="relative z-10 flex flex-col items-center space-y-6">
-        {/* Premium title with gradient */}
-        <div className="flex flex-col items-center space-y-3">
-          <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 bg-clip-text text-transparent transition-all duration-500 group-hover:from-blue-700 group-hover:via-blue-800 group-hover:to-blue-900 group-hover:scale-105">
+      {/* Premium Card Content */}
+      <div className="relative z-10 flex flex-col items-center space-y-6 w-full">
+        
+        {/* Elegant title section */}
+        <div className="flex flex-col items-center space-y-4 w-full">
+          {/* Sophisticated divider line */}
+          <div className="w-12 h-0.5 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full opacity-70 group-hover:opacity-100 group-hover:w-16 transition-all duration-500"></div>
+          
+          {/* Premium gradient title */}
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-slate-800 via-blue-700 to-slate-900 bg-clip-text text-transparent transition-all duration-500 group-hover:scale-105 tracking-tight">
             {title}
           </h3>
         </div>
 
-        <p className="text-gray-600 leading-relaxed text-lg max-w-sm group-hover:text-gray-800 transition-all duration-500 group-hover:translate-y-1">
+        {/* Enhanced description */}
+        <p className="text-slate-600 leading-relaxed text-base max-w-sm group-hover:text-slate-800 transition-colors duration-500 font-medium">
           {description}
         </p>
       </div>
 
-      {/* Premium bottom accent with pulse animation */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-0 h-1 bg-gradient-to-r from-blue-500 to-blue-700 rounded-full transition-all duration-700 group-hover:w-5/6 group-hover:animate-pulse"></div>
+      {/* Refined bottom accent */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-500 group-hover:w-3/4 group-hover:opacity-80"></div>
 
-      {/* Corner decorative elements */}
-      <div className="absolute top-6 right-6 w-3 h-3 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-bounce"></div>
-      <div className="absolute bottom-6 left-6 w-2 h-2 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full opacity-0 group-hover:opacity-80 transition-all duration-700 animate-pulse delay-200"></div>
+      {/* Subtle corner accents */}
+      <div className="absolute top-4 right-4 w-2 h-2 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100"></div>
+      <div className="absolute bottom-4 left-4 w-1.5 h-1.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 delay-200"></div>
+
+      {/* Add to your global CSS */}
+      <style jsx>{`
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.1; }
+          50% { opacity: 0.15; }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 3s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   )
 }
