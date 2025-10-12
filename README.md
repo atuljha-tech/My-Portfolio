@@ -2,6 +2,8 @@
 
 A modern, responsive portfolio website built with Next.js, showcasing my skills, projects, and achievements as an aspiring Full-Stack Developer.
 
+![Portfolio Screenshot](assets/ss7.png)
+
 ## 🌟 Live Demo
 
 🔗 **Portfolio Link:** [https://atul-portfolio-site.vercel.app/](https://atul-portfolio-site.vercel.app/)
