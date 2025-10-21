@@ -55,7 +55,7 @@ export default function HomePage() {
               <p className="text-base sm:text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
                 I'm a passionate Computer Science student exploring the world of web development.
                 Currently learning modern stacks like{" "}
-                <span className="font-semibold text-blue-600">React, Next.js, NestJS, and MongoDB</span>.
+                <span className="font-semibold text-blue-600">React, Next.js, Blockchain and MongoDB</span>.
                 Eager to build full-stack projects and grow into a skilled developer.
               </p>
 
